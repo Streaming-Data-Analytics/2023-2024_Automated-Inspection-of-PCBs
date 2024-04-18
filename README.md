@@ -2,7 +2,7 @@
 
 Optional project of the [Streaming Data Analytics](http://emanueledellavalle.org/teaching/streaming-data-analytics-2023-24/) course provided by [Politecnico di Milano](https://www11.ceda.polimi.it/schedaincarico/schedaincarico/controller/scheda_pubblica/SchedaPublic.do?&evn_default=evento&c_classe=811164&polij_device_category=DESKTOP&__pj0=0&__pj1=d563c55e73c3035baf5b0bab2dda086b).
 
-Student: **[To be assigned]**
+Student: **Ortolani Giulia & Venanzi Alessandro**
 
 This project focuses on leveraging image processing techniques and event-driven systems to automate the inspection of Printed Circuit Boards (PCBs) for quality control in manufacturing processes. By analyzing images of PCBs, the system aims to verify the condition of electronic components according to design specifications.
 
