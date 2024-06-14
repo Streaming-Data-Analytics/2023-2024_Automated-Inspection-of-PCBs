@@ -125,7 +125,6 @@ def detect_defects(frame):
     return frame
 
 
-
 @app.agent(raw_frames_topic)
 async def process_frames(frames):
     async for frame in frames:
