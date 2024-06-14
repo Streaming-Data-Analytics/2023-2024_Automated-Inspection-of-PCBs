@@ -194,3 +194,4 @@
 [2024-06-13 16:31:47,616] INFO [Broker id=0] Leader processed_frames-0 with topic id Some(7Xsch9whS3qVRc6BXjJ8Kg) starts at leader epoch 0 from offset 0 with partition epoch 0, high watermark 0, ISR [0], adding replicas [] and removing replicas [] . Previous leader None and previous leader epoch was -1. (state.change.logger)
 [2024-06-13 16:31:47,625] INFO [Broker id=0] Finished LeaderAndIsr request in 14ms correlationId 7 from controller 0 for 1 partitions (state.change.logger)
 [2024-06-13 16:31:47,629] INFO [Broker id=0] Add 1 partitions and deleted 0 partitions from metadata cache in response to UpdateMetadata request sent by controller 0 epoch 1 with correlation id 8 (state.change.logger)
+[2024-06-13 16:46:57,147] INFO [Controller id=0 epoch=1] Sending UpdateMetadata request to brokers HashSet() for 0 partitions (state.change.logger)

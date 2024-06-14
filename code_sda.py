@@ -35,6 +35,7 @@ not_found = np.nan
 #         processed_frame = detect_defects(frame)
 #         await processed_frames_topic.send(value=processed_frame)
 
+
 @app.agent(raw_frames_topic)
 async def process_frames(frames):
     async for frame_bytes in frames:
@@ -43,6 +44,7 @@ async def process_frames(frames):
         processed_frame = detect_defects(frame)
         _, buffer = cv2.imencode('.jpg', processed_frame)
         await processed_frames_topic.send(value=buffer.tobytes())
+
 
 color_map = {
     0: (155, 95, 224),
@@ -53,6 +55,7 @@ color_map = {
     5: (249, 165, 44),
     6: (214, 78, 18)
 }
+
 
 def calculate_iou(box1, box2):
     """
@@ -83,6 +86,7 @@ def calculate_iou(box1, box2):
     iou = intersection_area / float(box1_area + box2_area - intersection_area)
     return iou
 
+
 def find_closest(pred1, pred2): # Pred2 è model.predict, pred1 è pred vecchia
     """
     Match bounding boxes from pred1 to pred2 using IoU metric.
@@ -101,8 +105,42 @@ def find_closest(pred1, pred2): # Pred2 è model.predict, pred1 è pred vecchia
             matches[i] = not_found
 
     return matches
+    
+    # loop sul primo indice dei matches:
+    #   if is not None: hai la prediction, hai la mappa. x_new = (x(i) + prev_i)/2
+    # questa function deve resistuirmi le prediction
 
-def detect_defects(frame, prev_detections):
+    # find closest mappa il bb nella prediction vecchia con quella nuova
+    # mappa con a sx la prediction vecchia e a dx la prediction nuova (se c'è)
+    # scorriamo l'indice a dx (sulle pred nuove) e matchi tra vecchia e nuova pred
+    # hash map che collega quello che serve (dict)
+    # ora scorriamo le nuove predicition e ognuna la aggreghiamo all'altra: la nuova prediction
+    # idealmente va aggregata -> abbiamo la media tra nuova e vecchia
+    # dopo di questo sull'asse y la nuova prediction sarà la composizione della pred
+    # fatta dal modello y(i) e sulla parte destra ci sarà la stima fatta con l'altro frame
+    # y_pred(i) + w*t dove w è la velocità stimata e t = 1/fps.
+    # t lo abbiamo perché è costante (è come scorre)
+    # possiamo stimare la variazione wt = Delta y
+    # facciamo la media tra la predizione e il deltay stimato sui due istanti precedenti
+    # variabile global deltay aggiornata ogni volta scorrendo a t-1
+    # questo dà le coordinate (x,y) predette dal modello 
+
+    # serve mettere un po' di if (tipo alla prima prediction non puoi stimare la velocità)
+    # fatto questo avrò le prediction 
+
+    # prendo il frame, faccio i magheggi per trovare x0,x1,y0,y1 
+    #     x0 = int(prediction['x'] - prediction['width'] / 2)
+    #     x1 = int(prediction['x'] + prediction['width'] / 2)
+    #     y0 = int(prediction['y'] - prediction['height'] / 2)
+    #     y1 = int(prediction['y'] + prediction['height'] / 2)
+    # ritornare il frame
+
+    # riaggiorno la parte AR: ristimare i parametri
+    # cambia deltay e salvare il frame appena predetto come previous_frame
+
+    # forse: invece di considerare il frame precedente ne considero due precedenti
+
+def detect_defects(frame):
     predictions = model.predict(frame).json()['predictions']
 
     for prediction in predictions:
@@ -114,8 +152,7 @@ def detect_defects(frame, prev_detections):
         color = color_map.get(class_id, (255, 255, 255))
         cv2.rectangle(frame, (x0, y0), (x1, y1), color, 4)
     
-    return frame, prev_detections
-
+    return frame
 
 
 async def main():  #  read video and send frames to raw_frames_topic
@@ -142,6 +179,7 @@ async def main():  #  read video and send frames to raw_frames_topic
 
     cap.release()
 
+
 @app.agent(processed_frames_topic) # write processed frames to video file
 async def write_processed_frames(frames):
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -154,6 +192,7 @@ async def write_processed_frames(frames):
 
     output_video.release()
     print("Video processing complete. Processed video saved as 'processed_video.mp4'.")
+
 
 if __name__ == '__main__':
     app.main()
