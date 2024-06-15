@@ -1,0 +1,4 @@
+[2024-06-15 16:13:25,799] INFO Expiring session 0x10000128dc80000, timeout of 18000ms exceeded (org.apache.zookeeper.server.ZooKeeperServer)
+[2024-06-15 16:13:27,535] INFO Invalid session 0x10000128dc80000 for client /127.0.0.1:54718, probably expired (org.apache.zookeeper.server.ZooKeeperServer)
+[2024-06-15 16:31:10,603] INFO Expiring session 0x10000128dc80001, timeout of 18000ms exceeded (org.apache.zookeeper.server.ZooKeeperServer)
+[2024-06-15 16:31:12,371] INFO Invalid session 0x10000128dc80001 for client /127.0.0.1:59636, probably expired (org.apache.zookeeper.server.ZooKeeperServer)

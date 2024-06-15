@@ -53,7 +53,7 @@ frame_height = 550
 band_height = 100  # Height of the black band between images
 slide_speed = 4  # Pixels to slide per frame
 fps = 30
-output_path = 'output_video.mp4'
+output_path = 'input_video.mp4'
 
 # Create frames with vertical sliding effect
 frames = create_sliding_frames(images, image_folder, frame_width, frame_height, slide_speed, band_height)
