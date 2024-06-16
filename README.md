@@ -113,18 +113,18 @@ The processing pipeline utilizes Apache Kafka for message streaming and Faust fo
     bin/kafka-topics.sh --create --topic processed_frames --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
     ```
 
-3. **Faust Worker:**
+3. **Start Faust Application:**
    In the main directory, start the Faust worker to process the frames:
    ```sh
-   faust -A process_video worker -l info
+   faust -A faust_app worker -l info
    ``` 
-   Here, `-A` stands for Application. So, we want to start the `process_video` application of Faust.
+   Here, `-A` stands for Application. So, we want to start the `faust_app` application of Faust.
    `-l info` means that I want to print all the logs that are generated.
 
 4. **Process Video:**
    Run the script to start processing the video:
    ```sh
-   python3 process_video.py --input input_video.mp4 --output output_video.mp4
+   python3 main.py --input input_video.mp4 --output output_video.mp4
    ```
 
 ### Command-Line Options
@@ -188,6 +188,12 @@ GROUP_ID = 'pcb_defect_group'
 * To list Kafka topics use:
     ```sh
     bin/kafka-topics.sh --list --bootstrap-server localhost:9092 
+    ```
+
+* To delete Kafka topics:
+    ```sh
+    bin/kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic raw_frames
+    bin/kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic processed_frames
     ```
 
 ### Work environment
