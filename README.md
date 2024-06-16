@@ -107,17 +107,19 @@ The processing pipeline utilizes Apache Kafka for message streaming and Faust fo
    ```
 
 2. **Create Topics:**
-In the Kafka directory, open a new terminal and create two topics:
+    In the Kafka directory, open a new terminal and create two topics:
     ```sh
     bin/kafka-topics.sh --create --topic raw_frames --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
     bin/kafka-topics.sh --create --topic processed_frames --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
     ```
 
 3. **Faust Worker:**
-    In the main directory, start the Faust worker to process the frames:
+   In the main directory, start the Faust worker to process the frames:
    ```sh
    faust -A process_video worker -l info
-   ```
+   ``` 
+   Here, `-A` stands for Application. So, we want to start the `process_video` application of Faust.
+   `-l info` means that I want to print all the logs that are generated.
 
 4. **Process Video:**
    Run the script to start processing the video:
