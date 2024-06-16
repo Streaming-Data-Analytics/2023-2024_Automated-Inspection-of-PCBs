@@ -185,6 +185,11 @@ GROUP_ID = 'pcb_defect_group'
     bin/kafka-topics.sh --create --topic processed_frames --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
     ```
 
+* To list Kafka topics use:
+    ```sh
+    bin/kafka-topics.sh --list --bootstrap-server localhost:9092 
+    ```
+
 ### Work environment
 
 * To check that all the versions are compatible:

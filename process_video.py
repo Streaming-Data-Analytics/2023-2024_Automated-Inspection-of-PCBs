@@ -36,7 +36,8 @@ not_found = np.nan
 confidence_threshold = 0.7
 
 k = 5       # k is the number of old frames we keep track of
-global prev = deque()
+prev = {}
+# global prev = deque()
 
 color_map = {
     0: (155, 95, 224),
@@ -48,20 +49,27 @@ color_map = {
     6: (214, 78, 18)
 }
 
-class Frame(faust.Record):
-    frame_id: int
-    image: bytes
+# class Frame(faust.Record):
+#     frame_id: int
+#     frame: str
 
 # CONSUMER PART
 @app.agent(input_topic) # decorator to define async stream processor (faust works in asynchronous manner)
 async def process(frames): # frames is the stream: infinite async iterable, consuming messages from a topic/channel
     # consuming the data from the input stream:
     async for frame in frames: # we can think of this as data continuously appended in an unbounded table
-        image = np.frombuffer(frame.image, dtype=np.uint8).reshape(height, width, 3)
-
+        
+        # THIS TYPES ARE NOT CORRECT ---> WORK HERE
+        print(type(frame))
+        image = np.frombuffer(frame, dtype=np.uint8)
+        print(type(image))
+        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+        
         # processing the input frame:
+        print(type(image))
         processed_image = detect_defects(image)
-        processed_frame = Frame(frame_id=frame.frame_id, image=processed_image.tobytes())
+        _, buffer = cv2.imencode('.jpg', processed_image)
+        processed_frame = Frame(frame_id=frame.frame_id, frame=buffer.tobytes().hex())
 
         # PRODUCER PART
         # publishing the processed frame in the ouput topic
@@ -122,15 +130,19 @@ def predict(frame): # questa la predict "base" per avere tutto più compatto
   return model.predict(frame).json()['predictions']
 
 def detect_defects(frame):
+    # frame_str = json.dumps(frame.frame)
     cur = predict(frame)
     v = 1 # da inizializzare a un valore sensato
-    m = find_closest(cur,prev)
-    for i in len(m):
+    if prev:
+        m = find_closest(cur,prev)
+    else:
+        m = {}
+    for i in range(len(m)):
         # ricorda che m è un hash map tra gli indici di cur e prev
-        if v and m[i] != not_found and prev[i].confience >= confidence_threshold:
+        if v and m[i] != not_found and prev[m[i]]['confidence'] >= confidence_threshold:
             x = 1/(k+1)*(cur[i]['x']+prev[m[i]]['x'])
             # qua lo sbatti è che dovrei fare il return_closest k volte, da provare (per ora cosi ha senso solo per k = 1)
-            y = 1/2*(cur[i]['y']+prev[m[i]]['x'] + v / fps)
+            y = 1/2*(cur[i]['y']+prev[m[i]]['x'] + v / fps) # v o v/fps?
         else:
             x = cur[i]['x']
             y = cur[i]['y']
@@ -143,10 +155,10 @@ def detect_defects(frame):
         color = color_map.get(class_id, (255, 255, 255))
         cv2.rectangle(frame, (x0, y0), (x1, y1), color, 4)
 
-        v.update(cur)
-        prev.popleft()
-        prev.append(cur)
-    
+        # v.update(cur)
+
+    # prev.popleft() # non va la deque bro
+    prev.append(cur)
     return frame
 
 def send_video_to_kafka(video_path, kafka_topic, bootstrap_servers='localhost:9092'):
@@ -158,7 +170,7 @@ def send_video_to_kafka(video_path, kafka_topic, bootstrap_servers='localhost:90
 
     cap = cv2.VideoCapture(video_path)
 
-    frame_id = 0
+    # frame_id = 0
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -168,12 +180,10 @@ def send_video_to_kafka(video_path, kafka_topic, bootstrap_servers='localhost:90
         if not ret:
             continue
 
-        producer.send(kafka_topic, {
-            'frame_id': frame_id,
-            'frame': buffer.tobytes()
-        })
-
-        frame_id += 1
+        # newframe = Frame(frame_id=frame_id, frame=buffer.tobytes().hex())
+        # producer.send(kafka_topic, value=newframe)
+        producer.send(kafka_topic, value=buffer)
+        # frame_id += 1
 
     cap.release()
     producer.flush()
@@ -193,7 +203,9 @@ def create_video_from_kafka(kafka_topic, video_path, frame_width, frame_height, 
     for message in consumer:
         frame_data = message.value
         frame_id = frame_data['frame_id']
-        image_bytes = frame_data['frame']
+        
+        image_hex = frame_data['frame']
+        image_bytes = bytes.fromhex(image_hex)
 
         image = np.frombuffer(image_bytes, dtype=np.uint8)
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
@@ -220,7 +232,7 @@ if __name__ == '__main__':
     fps = cap.get(cv2.CAP_PROP_FPS)
     cap.release()
 
-    print(f"Extracted {frame_count} frames with width={width} and height={height} at fps={fps}.")
+    print(f"Extracted frames with width={width} and height={height} at fps={fps}.")
 
     # send to kafka the frames from the raw video
     send_video_to_kafka(args.input, INPUT_TOPIC)
