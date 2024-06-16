@@ -68,7 +68,7 @@ if __name__ == '__main__':
     # send to kafka the frames from the raw video
     send_video_to_kafka(args.input, INPUT_TOPIC)
     print(f"Frames sent to Kafka")
-    create_video_from_kafka(INPUT_TOPIC, args.output, frame_width=width, frame_height=height, fps=fps)
+    
     print("Starting Faust application...")
     app.main() # Faust
 
