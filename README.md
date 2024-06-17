@@ -217,3 +217,9 @@ GROUP_ID = 'pcb_defect_group'
     ```sh
     pip install --upgrade mode faust asyncio
     ```
+
+### Video examples
+
+To see some examples of static inference, check the videos in the folder:
+https://drive.google.com/drive/folders/1QI4GRtid38Vlh-j_OZxkhYknfhTGHpoi?usp=sharing
+(they were too heavy to be uploaded on GitHub)
