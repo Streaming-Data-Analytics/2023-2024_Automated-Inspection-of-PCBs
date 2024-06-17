@@ -1,4 +1,4 @@
-# pip install kafka-python opencv-python faust
+# pip install kafka-python opencv-python faust-streaming inference supervision
 
 from roboflow import Roboflow
 import cv2
@@ -10,23 +10,20 @@ import json
 from kafka import KafkaProducer, KafkaConsumer
 from kafka.errors import KafkaError
 import numpy as np
-from collections import deque # uso una queue per salvare le prev detections (ottimizzata per quello che ci devo fare)
+from collections import defaultdict, deque # uso una queue per salvare le prev detections (ottimizzata per quello che ci devo fare)
 from utilities import send_video_to_kafka, create_video_from_kafka
 from faust_app import app
 from process_video import detect_defects
+import supervision as sv
 
 KAFKA_BROKER = 'kafka://localhost:9092'
 INPUT_TOPIC = 'raw_frames'
 OUTPUT_TOPIC = 'processed_frames'
-# GROUP_ID = 'pcb_defect_group'
 
 # input_topic = app.topic(INPUT_TOPIC, value_type=bytes)
 # output_topic = app.topic(OUTPUT_TOPIC, value_type=bytes)
 
-# MODEL
-rf = Roboflow(api_key="Esa6AwYGxOgMqLvAAAWG")
-project = rf.workspace().project("pcb-defects")
-model = project.version(2).model
+
 
 threshold = 30
 not_found = np.nan
@@ -45,6 +42,7 @@ color_map = {
     5: (249, 165, 44),
     6: (214, 78, 18)
 }
+
 
 if __name__ == '__main__':
 
@@ -66,15 +64,13 @@ if __name__ == '__main__':
     print(f"Extracted frames with width={width} and height={height} at fps={fps}.")
 
     # send to kafka the frames from the raw video
+    print("Sending frames to Kafka...")
+    print(f"Processing output video... ")
     send_video_to_kafka(args.input, INPUT_TOPIC)
     print(f"Frames sent to Kafka")
-    
-    print("Starting Faust application...")
-    app.main() # Faust
-
-    print("Faust started")
 
     # take the processed frames from kafka and make the output video
-    create_video_from_kafka(OUTPUT_TOPIC, args.output, frame_width=width, frame_height=height, fps=fps)
+    # print(f"Processing output video...")
+    # create_video_from_kafka(OUTPUT_TOPIC, args.output, frame_width=width, frame_height=height, fps=fps)
 
-    print(f"Output video saved to {args.output}")
+    # print(f"Output video saved to {args.output}")

@@ -2,7 +2,7 @@
 
 Optional project of the [Streaming Data Analytics](http://emanueledellavalle.org/teaching/streaming-data-analytics-2023-24/) course provided by [Politecnico di Milano](https://www11.ceda.polimi.it/schedaincarico/schedaincarico/controller/scheda_pubblica/SchedaPublic.do?&evn_default=evento&c_classe=811164&polij_device_category=DESKTOP&__pj0=0&__pj1=d563c55e73c3035baf5b0bab2dda086b).
 
-Student: **Ortolani Giulia & Venanzi Alessandro**
+Students: **Ortolani Giulia & Venanzi Alessandro**
 
 ## Overview
 
@@ -121,7 +121,14 @@ The processing pipeline utilizes Apache Kafka for message streaming and Faust fo
    Here, `-A` stands for Application. So, we want to start the `faust_app` application of Faust.
    `-l info` means that I want to print all the logs that are generated.
 
-4. **Process Video:**
+4. **Start Flask:**
+    In another terminal, run:
+   ```sh
+   python3 flask_app.py
+   ``` 
+   To see the output video open `http://localhost:5000/`.
+
+5. **Process Video:**
    Run the script to start processing the video:
    ```sh
    python3 main.py --input input_video.mp4 --output output_video.mp4
@@ -181,7 +188,6 @@ GROUP_ID = 'pcb_defect_group'
 * Remember to create the Kafka topics (in the Kafka directory):
     ```sh
     bin/kafka-topics.sh --create --topic raw_frames --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
-
     bin/kafka-topics.sh --create --topic processed_frames --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
     ```
 
