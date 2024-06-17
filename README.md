@@ -43,6 +43,7 @@ The expected result is a dockerized application that demos the complete pipeline
 - [Installation](#installation)
 - [Usage](#usage)
 - [Utilities](#utilities)
+- [Video examples](#video_examples)
 
 
 ## Requirements
@@ -218,7 +219,7 @@ GROUP_ID = 'pcb_defect_group'
     pip install --upgrade mode faust asyncio
     ```
 
-### Video examples
+## Video examples
 
 To see some examples of static inference, check the videos in the folder:
 https://drive.google.com/drive/folders/1QI4GRtid38Vlh-j_OZxkhYknfhTGHpoi?usp=sharing
