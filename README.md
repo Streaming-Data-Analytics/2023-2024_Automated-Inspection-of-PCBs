@@ -43,7 +43,7 @@ The expected result is a dockerized application that demos the complete pipeline
 - [Installation](#installation)
 - [Usage](#usage)
 - [Utilities](#utilities)
-- [Video examples](#video_examples)
+- [Video examples](#video-examples)
 
 
 ## Requirements
