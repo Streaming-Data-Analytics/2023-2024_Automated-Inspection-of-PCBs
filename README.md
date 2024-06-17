@@ -48,7 +48,7 @@ The expected result is a dockerized application that demos the complete pipeline
 ## Requirements
 
 - Python 3.7+
-- Faust (`streaming-faust`)
+- Faust (`[streaming-faust](https://faust.readthedocs.io/en/latest/)`)
 - Kafka
 
 The complete list of requirements is contained in `requirements.txt`.
