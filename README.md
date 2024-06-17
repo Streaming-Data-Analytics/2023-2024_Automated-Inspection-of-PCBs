@@ -71,6 +71,15 @@ The processing pipeline utilizes Apache Kafka for message streaming and Faust fo
    * Faust Stream Processing: Leverages Faust to process video frames in real-time.
    * Output Video Generation: Combines processed frames into a final output video.
 
+## Model 
+
+To perform the inference, we use a pretrained YOLOv9 model, fine-tuned on PCBs images.
+Moreover, using a speed estimation - like approach, we kept track of the detections, and evaluated two metrics: one the x-axis component and another on the y-axis.
+Under the assumptions of static camera pointing perpendicularly to the conveyor belt where PCBs are located, we studied the distribution of:
+  * $\varepsilon_x = \text{median}(x_c^{det})-x_c^{det}$
+  * $\varepsilon_y = \lfloor\hat{v} \cdot  \Delta t \rfloor + y_{c,t-\Delta t} - y_{c,t} $
+
+and assessed the feasibiity of our approach.
 
 ## Installation
 
