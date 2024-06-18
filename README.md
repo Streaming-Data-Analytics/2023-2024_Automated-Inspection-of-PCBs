@@ -224,6 +224,9 @@ Tested on VM Ubuntu 22.04.4 LTS (Jammy Jellyfish).
 
 ## Video examples
 
-To see some examples of static inference, check the videos in the folder:
-https://drive.google.com/drive/folders/1QI4GRtid38Vlh-j_OZxkhYknfhTGHpoi?usp=sharing
-(they were too heavy to be uploaded on GitHub)
+To see some examples of static inference, check this videos:
+
+* Inference on an HD image: no effects, rotation, rotation + blur $\longrightarrow$ https://youtu.be/GJkiwPN0Mfg
+* Inference on a low quality image, the model misses the detections of the small defects $\longrightarrow$ https://youtu.be/S_aBpqEtJdo
+
+Videos were created and rendered using Sony Vegas Pro 21
