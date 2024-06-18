@@ -65,12 +65,10 @@ if __name__ == '__main__':
 
     # send to kafka the frames from the raw video
     print("Sending frames to Kafka...")
-    print(f"Processing output video... ")
     send_video_to_kafka(args.input, INPUT_TOPIC)
     print(f"Frames sent to Kafka")
 
     # take the processed frames from kafka and make the output video
-    # print(f"Processing output video...")
-    # create_video_from_kafka(OUTPUT_TOPIC, args.output, frame_width=width, frame_height=height, fps=fps)
-
-    # print(f"Output video saved to {args.output}")
+    print(f"Processing output video...")
+    create_video_from_kafka(OUTPUT_TOPIC, args.output, frame_width=width, frame_height=height, fps=fps)
+    print(f"Output video saved to {args.output}")

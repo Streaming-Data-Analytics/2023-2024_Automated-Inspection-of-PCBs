@@ -64,7 +64,7 @@ def create_video_from_kafka(kafka_topic, video_path, frame_width, frame_height, 
 
         out.write(frame)
         count += 1
-        if count > 100: break
+        if count > 1000: break
 
     out.release()
     consumer.close()
