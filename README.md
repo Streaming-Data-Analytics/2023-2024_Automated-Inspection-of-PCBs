@@ -216,10 +216,11 @@ GROUP_ID = 'pcb_defect_group'
 
 Tested on VM Ubuntu 22.04.4 LTS (Jammy Jellyfish).
 
-* To check that all the versions are compatible:
+<!-- * To check that all the versions are compatible:
     ```sh
     pip install --upgrade mode faust asyncio
     ```
+  -->
 
 ## Video examples
 
